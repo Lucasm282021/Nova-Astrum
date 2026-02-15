@@ -26,7 +26,7 @@
                     <li style="margin: 10px;"><a href="#" id="start-btn" style="color: white; text-decoration: none; font-size: 20px;">Iniciar Juego</a></li>
                     <li style="margin: 10px;"><a href="#" id="options-btn" style="color: white; text-decoration: none; font-size: 20px;">Opciones</a></li>
                     <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Instrucciones</a></li>
-                    <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Salir</a></li>
+                    <li style="margin: 10px;"><a href="#" id="score-btn" style="color: white; text-decoration: none; font-size: 20px;">Score</a></li>
                 </ul>
             </nav>
             <nav id="options-menu" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; text-align: center; min-width: 200px;">
@@ -40,6 +40,24 @@
                     <li style="margin: 20px 10px 10px;"><a href="#" id="options-back" style="color: #ff4d4d; text-decoration: none; font-size: 20px;">Volver</a></li>
                 </ul>
             </nav>
+            <div id="game-over-screen" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; text-align: center; min-width: 300px; color: white;">
+                <h1 style="color: #ff4d4d; margin-top: 0;">GAME OVER</h1>
+                <p style="font-size: 24px;">Puntos: <span id="final-score">0</span></p>
+                <div id="high-score-input" style="display: none;">
+                    <p style="color: #00d4ff;">¡Nuevo Récord!</p>
+                    <input type="text" id="player-name" placeholder="Tu Nombre" maxlength="10" style="padding: 5px; font-size: 16px; text-align: center; width: 150px; border-radius: 5px; border: none;">
+                    <button id="save-score-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 16px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 5px;">Guardar</button>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button id="restart-btn" style="padding: 10px 20px; font-size: 18px; cursor: pointer; background: #00d4ff; border: none; color: black; border-radius: 5px;">Reiniciar</button>
+                    <button id="menu-btn" style="padding: 10px 20px; font-size: 18px; cursor: pointer; background: #ff4d4d; border: none; color: white; border-radius: 5px; margin-left: 10px;">Menú</button>
+                </div>
+            </div>
+            <div id="high-scores-screen" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; text-align: center; min-width: 300px; color: white;">
+                <h2 style="color: #00d4ff; margin-top: 0;">Mejores Puntuaciones</h2>
+                <ol id="high-scores-list" style="text-align: left; padding-left: 20px; font-size: 18px; margin: 0 auto; display: inline-block;"></ol>
+                <div style="margin-top: 20px;"><button id="close-scores-btn" style="padding: 5px 15px; font-size: 16px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;">Cerrar</button></div>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

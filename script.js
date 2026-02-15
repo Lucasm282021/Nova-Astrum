@@ -11,6 +11,17 @@ const diffHard = document.getElementById("diff-hard");
 const optionsBack = document.getElementById("options-back");
 const btnMusic = document.getElementById("btn-music");
 const btnSound = document.getElementById("btn-sound");
+const scoreBtn = document.getElementById("score-btn");
+const gameOverScreen = document.getElementById("game-over-screen");
+const finalScoreSpan = document.getElementById("final-score");
+const highScoreInput = document.getElementById("high-score-input");
+const playerNameInput = document.getElementById("player-name");
+const saveScoreBtn = document.getElementById("save-score-btn");
+const restartBtn = document.getElementById("restart-btn");
+const menuBtn = document.getElementById("menu-btn");
+const highScoresScreen = document.getElementById("high-scores-screen");
+const highScoresList = document.getElementById("high-scores-list");
+const closeScoresBtn = document.getElementById("close-scores-btn");
 
 const playerImg = new Image();
 playerImg.src = "img/nave.png";
@@ -55,6 +66,10 @@ let isPaused = false;
 let playerDestroyed = false;
 let musicOn = true;
 let soundOn = true;
+let countdownText = "";
+
+// Cargar mejores puntuaciones
+let highScores = JSON.parse(localStorage.getItem('spaceShooterHighScores')) || [];
 
 // Configuración de Dificultad (Por defecto Normal)
 let spawnRate = 1000;
@@ -71,7 +86,7 @@ window.addEventListener("keyup", e => keys[e.code] = false);
 
 // Control con Mouse
 canvas.addEventListener("mousemove", e => {
-    if (!gameRunning || isPaused) return;
+    if (!gameRunning || isPaused || countdownText !== "") return;
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const mouseX = (e.clientX - rect.left) * scaleX;
@@ -85,7 +100,7 @@ canvas.addEventListener("mousemove", e => {
 
 // Disparo con clic del mouse
 canvas.addEventListener("mousedown", e => {
-    if (!gameRunning || isPaused) return;
+    if (!gameRunning || isPaused || countdownText !== "") return;
     e.preventDefault();
     bullets.push({ x: player.x + player.w / 2 - 2, y: player.y, w: 4, h: 15 });
     if (soundOn) {
@@ -186,14 +201,12 @@ function update() {
                     gameOverSound.currentTime = 0;
                     gameOverSound.play();
                     gameOverSound.addEventListener("ended", () => {
-                        alert("¡GAME OVER! Puntos: " + score);
-                        location.reload();
+                        showGameOver();
                     }, { once: true });
                 }, { once: true });
             } else {
                 setTimeout(() => {
-                    alert("¡GAME OVER! Puntos: " + score);
-                    location.reload();
+                    showGameOver();
                 }, 500);
             }
         }
@@ -218,14 +231,12 @@ function update() {
                     gameOverSound.currentTime = 0;
                     gameOverSound.play();
                     gameOverSound.addEventListener("ended", () => {
-                        alert("¡GAME OVER! Puntos: " + score);
-                        location.reload();
+                        showGameOver();
                     }, { once: true });
                 }, { once: true });
             } else {
                 setTimeout(() => {
-                    alert("¡GAME OVER! Puntos: " + score);
-                    location.reload();
+                    showGameOver();
                 }, 500);
             }
         }
@@ -309,6 +320,14 @@ function draw() {
         }
     });
 
+    if (countdownText !== "") {
+        ctx.fillStyle = "white";
+        ctx.font = "80px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(countdownText, canvas.width / 2, canvas.height / 2);
+        ctx.textAlign = "start";
+    }
+
     if (isPaused) {
         ctx.fillStyle = "white";
         ctx.font = "40px Arial";
@@ -387,10 +406,28 @@ startBtn.addEventListener("click", (e) => {
     mainMenu.style.display = "none";
     gameRunning = true;
     playerDestroyed = false;
-    startEnemySpawners(); // Iniciar generación de enemigos con la dificultad seleccionada
     menuMusic.pause();
     menuMusic.currentTime = 0;
     if (musicOn) bgMusic.play();
+
+    // Lógica de cuenta regresiva
+    let count = 3;
+    countdownText = count.toString();
+    let countdownInterval = setInterval(() => {
+        if (!isPaused) {
+            count--;
+            if (count > 0) {
+                countdownText = count.toString();
+            } else if (count === 0) {
+                countdownText = "Go!!!";
+            } else {
+                clearInterval(countdownInterval);
+                countdownText = "";
+                startEnemySpawners(); // Iniciar enemigos al terminar la cuenta
+            }
+        }
+    }, 1000);
+
     gameLoop();
 });
 
@@ -402,3 +439,61 @@ if (musicOn) {
         }, { once: true });
     });
 }
+
+// Sonido al pasar el mouse por encima de cualquier opción del menú
+document.querySelectorAll("nav a").forEach(link => {
+    link.addEventListener("mouseenter", () => {
+        if (soundOn) {
+            shootSound.currentTime = 0;
+            shootSound.play();
+        }
+    });
+});
+
+// Funciones para Game Over y High Scores
+function showGameOver() {
+    gameOverScreen.style.display = "block";
+    finalScoreSpan.innerText = score;
+    highScoreInput.style.display = "none";
+    
+    // Verificar si es un High Score (Top 10)
+    const lowestScore = highScores.length < 10 ? 0 : highScores[highScores.length - 1].score;
+    
+    if (score > lowestScore || highScores.length < 10) {
+        highScoreInput.style.display = "block";
+        playerNameInput.value = "";
+        playerNameInput.focus();
+    }
+}
+
+saveScoreBtn.addEventListener("click", () => {
+    const name = playerNameInput.value.trim() || "Anónimo";
+    const newScore = { name, score };
+    highScores.push(newScore);
+    highScores.sort((a, b) => b.score - a.score);
+    highScores.splice(10); // Mantener solo los 10 mejores
+    localStorage.setItem('spaceShooterHighScores', JSON.stringify(highScores));
+    highScoreInput.style.display = "none";
+});
+
+restartBtn.addEventListener("click", () => {
+    location.reload();
+});
+
+menuBtn.addEventListener("click", () => {
+    location.reload();
+});
+
+scoreBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    mainMenu.style.display = "none";
+    highScoresScreen.style.display = "block";
+    highScoresList.innerHTML = highScores.length 
+        ? highScores.map(s => `<li>${s.name}: <span style="color: #00d4ff;">${s.score}</span></li>`).join('')
+        : "<p>No hay puntuaciones aún.</p>";
+});
+
+closeScoresBtn.addEventListener("click", () => {
+    highScoresScreen.style.display = "none";
+    mainMenu.style.display = "block";
+});
