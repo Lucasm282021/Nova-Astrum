@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Space Shooter JS</title>
+    <title>NOVA ASTRUM JS</title>
     <link rel="stylesheet" href="style.css">
     <style>
         nav a {
@@ -21,14 +21,17 @@
         <div id="ui">Puntos: <span id="score">0</span></div>
         <div style="position: relative;">
             <canvas id="gameCanvas" width="800" height="600"></canvas>
-            <nav id="main-menu" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; text-align: center;">
-                <ul style="list-style: none; padding: 0;">
-                    <li style="margin: 10px;"><a href="#" id="start-btn" style="color: white; text-decoration: none; font-size: 20px;">Iniciar Juego</a></li>
-                    <li style="margin: 10px;"><a href="#" id="options-btn" style="color: white; text-decoration: none; font-size: 20px;">Opciones</a></li>
-                    <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Instrucciones</a></li>
-                    <li style="margin: 10px;"><a href="#" id="score-btn" style="color: white; text-decoration: none; font-size: 20px;">Score</a></li>
-                </ul>
-            </nav>
+            <div id="main-menu" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;">
+                <button id="menu-music-toggle" style="position: absolute; bottom: 20px; right: 20px; background: none; border: none; color: white; font-size: 30px; cursor: pointer;">🔊</button>
+                <nav style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; text-align: center;">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 10px;"><a href="#" id="start-btn" style="color: white; text-decoration: none; font-size: 20px;">Iniciar Juego</a></li>
+                        <li style="margin: 10px;"><a href="#" id="options-btn" style="color: white; text-decoration: none; font-size: 20px;">Opciones</a></li>
+                        <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Instrucciones</a></li>
+                        <li style="margin: 10px;"><a href="#" id="score-btn" style="color: white; text-decoration: none; font-size: 20px;">Score</a></li>
+                    </ul>
+                </nav>
+            </div>
             <nav id="options-menu" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; text-align: center; min-width: 200px;">
                 <h2 style="color: white; margin-top: 0;">Dificultad</h2>
                 <ul style="list-style: none; padding: 0;">

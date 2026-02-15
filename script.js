@@ -11,6 +11,7 @@ const diffHard = document.getElementById("diff-hard");
 const optionsBack = document.getElementById("options-back");
 const btnMusic = document.getElementById("btn-music");
 const btnSound = document.getElementById("btn-sound");
+const menuMusicToggle = document.getElementById("menu-music-toggle");
 const scoreBtn = document.getElementById("score-btn");
 const gameOverScreen = document.getElementById("game-over-screen");
 const finalScoreSpan = document.getElementById("final-score");
@@ -385,6 +386,7 @@ btnMusic.addEventListener("click", (e) => {
     musicOn = !musicOn;
     btnMusic.innerText = musicOn ? "ON" : "OFF";
     btnMusic.style.color = musicOn ? "#00d4ff" : "white";
+    menuMusicToggle.innerText = musicOn ? "🔊" : "🔇";
     if (musicOn) {
         if (gameRunning) bgMusic.play();
         else menuMusic.play();
@@ -399,6 +401,19 @@ btnSound.addEventListener("click", (e) => {
     soundOn = !soundOn;
     btnSound.innerText = soundOn ? "ON" : "OFF";
     btnSound.style.color = soundOn ? "#00d4ff" : "white";
+});
+
+menuMusicToggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    musicOn = !musicOn;
+    menuMusicToggle.innerText = musicOn ? "🔊" : "🔇";
+    btnMusic.innerText = musicOn ? "ON" : "OFF";
+    btnMusic.style.color = musicOn ? "#00d4ff" : "white";
+    if (musicOn) {
+        menuMusic.play();
+    } else {
+        menuMusic.pause();
+    }
 });
 
 startBtn.addEventListener("click", (e) => {
