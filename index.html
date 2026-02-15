@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Space Shooter JS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="ui">Puntos: <span id="score">0</span></div>
+        <div style="position: relative;">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <nav id="main-menu" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 10px; text-align: center;">
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px;"><a href="#" id="start-btn" style="color: white; text-decoration: none; font-size: 20px;">Iniciar Juego</a></li>
+                    <li style="margin: 10px;"><a href="#" id="options-btn" style="color: white; text-decoration: none; font-size: 20px;">Opciones</a></li>
+                    <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Instrucciones</a></li>
+                    <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Salir</a></li>
+                </ul>
+            </nav>
+            <nav id="options-menu" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0, 0, 0, 0.9); padding: 20px; border-radius: 10px; text-align: center; min-width: 200px;">
+                <h2 style="color: white; margin-top: 0;">Dificultad</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin: 10px;"><a href="#" id="diff-easy" style="color: white; text-decoration: none; font-size: 20px;">Fácil</a></li>
+                    <li style="margin: 10px;"><a href="#" id="diff-normal" style="color: #00d4ff; text-decoration: none; font-size: 20px;">Normal</a></li>
+                    <li style="margin: 10px;"><a href="#" id="diff-hard" style="color: white; text-decoration: none; font-size: 20px;">Difícil</a></li>
+                    <li style="margin: 10px; color: white; font-size: 20px;">Música: <a href="#" id="btn-music" style="color: #00d4ff; text-decoration: none;">ON</a></li>
+                    <li style="margin: 10px; color: white; font-size: 20px;">Sonidos: <a href="#" id="btn-sound" style="color: #00d4ff; text-decoration: none;">ON</a></li>
+                    <li style="margin: 20px 10px 10px;"><a href="#" id="options-back" style="color: #ff4d4d; text-decoration: none; font-size: 20px;">Volver</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
