@@ -23,6 +23,9 @@ const menuBtn = document.getElementById("menu-btn");
 const highScoresScreen = document.getElementById("high-scores-screen");
 const highScoresList = document.getElementById("high-scores-list");
 const closeScoresBtn = document.getElementById("close-scores-btn");
+const instructionsBtn = document.getElementById("instructions-btn");
+const instructionsScreen = document.getElementById("instructions-screen");
+const instructionsBackBtn = document.getElementById("instructions-back-btn");
 
 const playerImg = new Image();
 playerImg.src = "img/nave.png";
@@ -32,6 +35,15 @@ enemyImg.src = "img/enemigo.png";
 
 const enemy2Img = new Image();
 enemy2Img.src = "img/enemigo2.png";
+
+const enemy3Img = new Image();
+enemy3Img.src = "img/enemigo3.png";
+
+const enemy4Img = new Image();
+enemy4Img.src = "img/enemigo4.png";
+
+const enemy5Img = new Image();
+enemy5Img.src = "img/enemigo5.png";
 
 const bgImg = new Image();
 bgImg.src = "img/fondo.jpg";
@@ -62,6 +74,7 @@ canvas.width = 600;
 canvas.height = 800;
 
 let score = 0;
+let level = 1;
 let gameRunning = false;
 let isPaused = false;
 let playerDestroyed = false;
@@ -76,6 +89,7 @@ let highScores = JSON.parse(localStorage.getItem('spaceShooterHighScores')) || [
 let spawnRate = 1000;
 let shooterSpawnRate = 3000;
 let enemySpeedMultiplier = 1;
+let currentDifficulty = 'normal';
 
 // Estado de las teclas
 const keys = {};
@@ -128,6 +142,7 @@ const explosions = [];
 // Variables para los intervalos
 let enemyInterval;
 let shooterInterval;
+let difficultyInterval;
 
 function startEnemySpawners() {
     // Limpiar intervalos anteriores si existen
@@ -137,13 +152,43 @@ function startEnemySpawners() {
     // Crear enemigos normales
     enemyInterval = setInterval(() => {
         if (gameRunning && !isPaused) {
+            const rand = Math.random();
+            let spawnImg = enemyImg;
+            let spawnHp = 1;
+            let spawnScore = 10;
+            let spawnSpeed = (2 + Math.random() * 3) * enemySpeedMultiplier;
+            let spawnType = 'normal';
+
+            if (rand < 0.5) {
+                // Enemigo 1 (Normal)
+            } else if (rand < 0.7) {
+                spawnImg = enemy3Img;
+                spawnScore = 15;
+                spawnType = 'type3';
+            } else if (rand < 0.85) {
+                spawnImg = enemy4Img;
+                spawnScore = 25;
+                spawnSpeed *= 1.2;
+                spawnType = 'type4';
+            } else {
+                spawnImg = enemy5Img;
+                spawnHp = 3; // Enemigo 5 es más duro (3 disparos)
+                spawnScore = 50;
+                spawnSpeed *= 0.7;
+                spawnType = 'type5';
+            }
+
             enemies.push({
                 x: Math.random() * (canvas.width - 60),
                 y: -60,
                 w: 60,
                 h: 60,
-                speed: (2 + Math.random() * 3) * enemySpeedMultiplier,
-                color: "#ff4d4d"
+                speed: spawnSpeed,
+                color: "#ff4d4d",
+                type: spawnType,
+                img: spawnImg,
+                hp: spawnHp,
+                scoreValue: spawnScore
             });
         }
     }, spawnRate);
@@ -157,7 +202,10 @@ function startEnemySpawners() {
                 w: 60,
                 h: 60,
                 speed: 3 * enemySpeedMultiplier,
-                type: 'shooter'
+                type: 'shooter',
+                img: enemy2Img,
+                hp: 1,
+                scoreValue: 20
             });
         }
     }, shooterSpawnRate);
@@ -188,7 +236,7 @@ function update() {
 
     // Mover balas enemigas
     for (let i = enemyBullets.length - 1; i >= 0; i--) {
-        enemyBullets[i].y += 5;
+        enemyBullets[i].y += enemyBullets[i].speed;
         
         if (rectIntersect(playerHitbox, enemyBullets[i])) {
             gameRunning = false;
@@ -245,7 +293,8 @@ function update() {
         // Lógica de disparo para enemigo tipo 'shooter'
         if (en.type === 'shooter' && Math.random() < 0.02) {
             enemyBullets.push({
-                x: en.x + en.w / 2 - 5, y: en.y + en.h, w: 10, h: 20
+                x: en.x + en.w / 2 - 5, y: en.y + en.h, w: 10, h: 20,
+                speed: 5 * enemySpeedMultiplier
             });
         }
 
@@ -253,22 +302,28 @@ function update() {
         // Colisión con balas
         for (let j = bullets.length - 1; j >= 0; j--) {
             if (rectIntersect(bullets[j], en)) {
-                explosions.push({
-                    x: en.x,
-                    y: en.y,
-                    w: en.w,
-                    h: en.h,
-                    timer: 20
-                });
-                enemies.splice(i, 1);
                 bullets.splice(j, 1);
-                score += 10;
-                scoreElement.innerText = score;
-                if (soundOn) {
-                    explosionSound.currentTime = 0;
-                    explosionSound.play();
+                
+                en.hp = en.hp || 1;
+                en.hp--;
+
+                if (en.hp <= 0) {
+                    explosions.push({
+                        x: en.x,
+                        y: en.y,
+                        w: en.w,
+                        h: en.h,
+                        timer: 20
+                    });
+                    enemies.splice(i, 1);
+                    score += (en.scoreValue || 10);
+                    scoreElement.innerText = score;
+                    if (soundOn) {
+                        explosionSound.currentTime = 0;
+                        explosionSound.play();
+                    }
+                    enemyDestroyed = true;
                 }
-                enemyDestroyed = true;
                 break;
             }
         }
@@ -293,6 +348,7 @@ function draw() {
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
     ctx.fillText("Puntos: " + score, 10, 30);
+    ctx.fillText("Nivel: " + level, canvas.width - 120, 30);
 
     // Dibujar jugador (Nave sencilla)
     if (playerDestroyed) {
@@ -314,7 +370,9 @@ function draw() {
 
     // Dibujar enemigos
     enemies.forEach(en => {
-        if (en.type === 'shooter') {
+        if (en.img) {
+            ctx.drawImage(en.img, en.x, en.y, en.w, en.h);
+        } else if (en.type === 'shooter') {
             ctx.drawImage(enemy2Img, en.x, en.y, en.w, en.h);
         } else {
             ctx.drawImage(enemyImg, en.x, en.y, en.w, en.h);
@@ -363,16 +421,19 @@ function setDifficulty(level) {
         spawnRate = 1500;
         shooterSpawnRate = 4000;
         enemySpeedMultiplier = 0.8;
+        currentDifficulty = 'easy';
         diffEasy.style.color = "#00d4ff";
     } else if (level === 'normal') {
         spawnRate = 1000;
         shooterSpawnRate = 3000;
         enemySpeedMultiplier = 1;
+        currentDifficulty = 'normal';
         diffNormal.style.color = "#00d4ff";
     } else if (level === 'hard') {
         spawnRate = 600;
         shooterSpawnRate = 2000;
         enemySpeedMultiplier = 1.5;
+        currentDifficulty = 'hard';
         diffHard.style.color = "#00d4ff";
     }
 }
@@ -422,6 +483,7 @@ startBtn.addEventListener("click", (e) => {
     gameRunning = true;
     playerDestroyed = false;
     menuMusic.pause();
+    level = 1;
     menuMusic.currentTime = 0;
     if (musicOn) bgMusic.play();
 
@@ -439,6 +501,18 @@ startBtn.addEventListener("click", (e) => {
                 clearInterval(countdownInterval);
                 countdownText = "";
                 startEnemySpawners(); // Iniciar enemigos al terminar la cuenta
+
+                // Aumentar velocidad progresivamente
+                if (difficultyInterval) clearInterval(difficultyInterval);
+                difficultyInterval = setInterval(() => {
+                    if (gameRunning && !isPaused) {
+                        let increase = 0.05;
+                        if (currentDifficulty === 'easy') increase = 0.02;
+                        if (currentDifficulty === 'hard') increase = 0.08;
+                        enemySpeedMultiplier += increase;
+                        level++;
+                    }
+                }, 5000);
             }
         }
     }, 1000);
@@ -510,5 +584,17 @@ scoreBtn.addEventListener("click", (e) => {
 
 closeScoresBtn.addEventListener("click", () => {
     highScoresScreen.style.display = "none";
+    mainMenu.style.display = "block";
+});
+
+instructionsBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    mainMenu.style.display = "none";
+    instructionsScreen.style.display = "flex";
+});
+
+instructionsBackBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    instructionsScreen.style.display = "none";
     mainMenu.style.display = "block";
 });

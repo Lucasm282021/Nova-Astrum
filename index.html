@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>NOVA ASTRUM JS</title>
+    <title>NOVA ASTRUM</title>
     <link rel="stylesheet" href="style.css">
     <style>
         nav a {
@@ -27,7 +27,7 @@
                     <ul style="list-style: none; padding: 0;">
                         <li style="margin: 10px;"><a href="#" id="start-btn" style="color: white; text-decoration: none; font-size: 20px;">Iniciar Juego</a></li>
                         <li style="margin: 10px;"><a href="#" id="options-btn" style="color: white; text-decoration: none; font-size: 20px;">Opciones</a></li>
-                        <li style="margin: 10px;"><a href="#" style="color: white; text-decoration: none; font-size: 20px;">Instrucciones</a></li>
+                        <li style="margin: 10px;"><a href="#" id="instructions-btn" style="color: white; text-decoration: none; font-size: 20px;">Instrucciones</a></li>
                         <li style="margin: 10px;"><a href="#" id="score-btn" style="color: white; text-decoration: none; font-size: 20px;">Score</a></li>
                     </ul>
                 </nav>
@@ -60,6 +60,44 @@
                 <h2 style="color: #00d4ff; margin-top: 0;">Mejores Puntuaciones</h2>
                 <ol id="high-scores-list" style="text-align: left; padding-left: 20px; font-size: 18px; margin: 0 auto; display: inline-block;"></ol>
                 <div style="margin-top: 20px;"><button id="close-scores-btn" style="padding: 5px 15px; font-size: 16px; cursor: pointer; background: #ff4d4d; color: white; border: none; border-radius: 5px;">Cerrar</button></div>
+            </div>
+            <div id="instructions-screen" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; background: rgba(0, 0, 0, 0.95); color: white; flex-direction: column; justify-content: center; align-items: center;">
+                <h1 style="color: #00d4ff; font-size: 40px; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 20px #00d4ff;">Instrucciones</h1>
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 15px; border: 1px solid rgba(0, 212, 255, 0.3); max-width: 80%;">
+                    <ul style="list-style: none; padding: 0; font-size: 20px; line-height: 2.2; text-align: left; margin: 0;">
+                        <li style="color: #00d4ff; font-weight: bold;">💻 PC:</li>
+                        <li>🖱️ Mover: Mouse | 💥 Disparar: Clic</li>
+                        <li style="color: #ff4d4d; font-weight: bold; margin-top: 10px;">🎯 Objetivo:</li>
+                        <li>Destruye enemigos, esquiva y sobrevive.</li>
+                        <li>⏸️ Pausa: Tecla 'P' o 'Esc'</li>
+                    </ul>
+                    <div style="margin-top: 20px; border-top: 1px solid rgba(0, 212, 255, 0.3); padding-top: 15px;">
+                        <h3 style="color: #ff4d4d; text-align: center; margin: 0 0 15px 0;">Enemigos y Puntos</h3>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
+                            <div style="text-align: center;">
+                                <img src="img/enemigo.png" style="width: 40px; height: 40px; object-fit: contain;">
+                                <div style="font-size: 14px; color: #00d4ff; margin-top: 5px;">10</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="img/enemigo3.png" style="width: 40px; height: 40px; object-fit: contain;">
+                                <div style="font-size: 14px; color: #00d4ff; margin-top: 5px;">15</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="img/enemigo2.png" style="width: 40px; height: 40px; object-fit: contain;">
+                                <div style="font-size: 14px; color: #00d4ff; margin-top: 5px;">20</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="img/enemigo4.png" style="width: 40px; height: 40px; object-fit: contain;">
+                                <div style="font-size: 14px; color: #00d4ff; margin-top: 5px;">25</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <img src="img/enemigo5.png" style="width: 50px; height: 50px; object-fit: contain;">
+                                <div style="font-size: 14px; color: #ff4d4d; font-weight: bold; margin-top: 5px;">50</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="instructions-back-btn" style="margin-top: 40px; padding: 15px 40px; font-size: 20px; cursor: pointer; background: #ff4d4d; border: none; color: white; border-radius: 50px; font-weight: bold; box-shadow: 0 0 15px rgba(255, 77, 77, 0.5); transition: transform 0.2s;">ENTENDIDO</button>
             </div>
         </div>
     </div>
