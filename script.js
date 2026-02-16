@@ -291,11 +291,12 @@ function update() {
         }
 
         // Lógica de disparo para enemigo tipo 'shooter'
-        if (en.type === 'shooter' && Math.random() < 0.02) {
+        if (level >= 5 && en.type === 'shooter' && !en.hasShot && Math.random() < 0.02) {
             enemyBullets.push({
                 x: en.x + en.w / 2 - 5, y: en.y + en.h, w: 10, h: 20,
                 speed: 5 * enemySpeedMultiplier
             });
+            en.hasShot = true;
         }
 
         let enemyDestroyed = false;
@@ -512,7 +513,7 @@ startBtn.addEventListener("click", (e) => {
                         enemySpeedMultiplier += increase;
                         level++;
                     }
-                }, 5000);
+                }, 15000);
             }
         }
     }, 1000);
