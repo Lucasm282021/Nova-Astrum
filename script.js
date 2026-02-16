@@ -70,8 +70,19 @@ bgMusic.loop = true;
 const menuMusic = new Audio("sound/intro.mp3");
 menuMusic.loop = true;
 
-canvas.width = 600;
-canvas.height = 800;
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", () => {
+    resize();
+    if (typeof player !== "undefined") {
+        player.y = canvas.height - 100;
+        if (player.x > canvas.width - player.w) player.x = canvas.width - player.w;
+    }
+    if (!gameRunning && menuBgImg.complete) ctx.drawImage(menuBgImg, 0, 0, canvas.width, canvas.height);
+});
+resize();
 
 let score = 0;
 let level = 1;
