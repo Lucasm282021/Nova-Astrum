@@ -65,6 +65,12 @@ explosionImg.src = "img/explocion.png";
 const playerExplosionImg = new Image();
 playerExplosionImg.src = "img/explocion-player.png";
 
+// --- ASSETS POWER-UPS ---
+const shieldImg = new Image();
+shieldImg.src = "img/PowerUp/shield.png";
+const weaponImg = new Image();
+weaponImg.src = "img/PowerUp/weapon.png";
+
 const menuBgImg = new Image();
 menuBgImg.src = "img/fondo-menu.png";
 menuBgImg.onload = () => {
@@ -171,6 +177,7 @@ pauseRestartBtn.addEventListener("click", () => {
     enemySpeedMultiplier = 1;
     if (difficultyInterval) clearInterval(difficultyInterval);
     
+    powerUps.length = 0; // Limpiar power-ups
     bullets.length = 0;
     enemyBullets.length = 0;
     explosions.length = 0;
@@ -178,6 +185,10 @@ pauseRestartBtn.addEventListener("click", () => {
     player.x = canvas.width / 2 - 40 * gameScale;
     player.y = canvas.height - 100 * gameScale;
     
+    // Resetear estados de power-ups
+    player.hasShield = false;
+    player.weaponLevel = 1;
+
     startEnemySpawners();
     
     // Reiniciar el incremento de dificultad
@@ -236,19 +247,37 @@ canvas.addEventListener("touchmove", e => {
 }, { passive: false });
 
 canvas.addEventListener("touchstart", e => {
-    if (gameRunning && !isPaused && countdownText === "") bullets.push({ x: player.x + player.w / 2 - 2 * gameScale, y: player.y, w: 4 * gameScale, h: 15 * gameScale });
+    if (gameRunning && !isPaused && countdownText === "") playerShoot();
 }, { passive: false });
 
 // Disparo con clic del mouse
 canvas.addEventListener("mousedown", e => {
     if (!gameRunning || isPaused || countdownText !== "") return;
     e.preventDefault();
-    bullets.push({ x: player.x + player.w / 2 - 2 * gameScale, y: player.y, w: 4 * gameScale, h: 15 * gameScale });
+    playerShoot();
+});
+
+// Función unificada de disparo para manejar Power-Ups
+function playerShoot() {
+    const bulletW = 4 * gameScale;
+    const bulletH = 15 * gameScale;
+
+    if (player.weaponLevel === 1) {
+        // Disparo normal (central)
+        bullets.push({ x: player.x + player.w / 2 - bulletW / 2, y: player.y, w: bulletW, h: bulletH });
+    } else if (player.weaponLevel >= 2) {
+        // Disparo Doble (izquierda y derecha)
+        bullets.push({ x: player.x, y: player.y + player.h / 2, w: bulletW, h: bulletH });
+        bullets.push({ x: player.x + player.w - bulletW, y: player.y + player.h / 2, w: bulletW, h: bulletH });
+        
+        // Si quisieras nivel 3 (Triple), podrías agregar otro 'if' aquí
+    }
+
     if (soundOn) {
         shootSound.currentTime = 0;
         shootSound.play();
     }
-});
+}
 
 // Jugador
 const player = {
@@ -257,23 +286,29 @@ const player = {
     w: 80 * gameScale,
     h: 80 * gameScale,
     speed: 5 * gameScale,
-    color: "#00d4ff"
+    color: "#00d4ff",
+    // Estados de Power-Ups
+    hasShield: false,
+    weaponLevel: 1
 };
 
 const bullets = [];
 const enemies = [];
 const enemyBullets = [];
 const explosions = [];
+const powerUps = []; // Array para almacenar power-ups activos
 
 // Variables para los intervalos
 let enemyInterval;
 let shooterInterval;
 let difficultyInterval;
+let powerUpInterval;
 
 function startEnemySpawners() {
     // Limpiar intervalos anteriores si existen
     if (enemyInterval) clearInterval(enemyInterval);
     if (shooterInterval) clearInterval(shooterInterval);
+    if (powerUpInterval) clearInterval(powerUpInterval);
 
     // Crear enemigos normales
     enemyInterval = setInterval(() => {
@@ -335,6 +370,24 @@ function startEnemySpawners() {
             });
         }
     }, shooterSpawnRate);
+
+    // Crear Power-Ups (Aparecen cada 15-25 segundos aprox)
+    powerUpInterval = setInterval(() => {
+        if (gameRunning && !isPaused) {
+            const type = Math.random() < 0.5 ? 'shield' : 'weapon';
+            const img = type === 'shield' ? shieldImg : weaponImg;
+            
+            powerUps.push({
+                x: Math.random() * (canvas.width - 40 * gameScale),
+                y: -40 * gameScale,
+                w: 40 * gameScale,
+                h: 40 * gameScale,
+                speed: 3 * gameScale,
+                type: type,
+                img: img
+            });
+        }
+    }, 15000);
 }
 
 function handleGameOver() {
@@ -380,11 +433,41 @@ function update() {
         if (bullets[i].y < 0) bullets.splice(i, 1);
     }
 
+    // Mover y gestionar Power-Ups
+    for (let i = powerUps.length - 1; i >= 0; i--) {
+        const p = powerUps[i];
+        p.y += p.speed;
+
+        // Colisión con jugador
+        if (rectIntersect(playerHitbox, p)) {
+            if (p.type === 'shield') {
+                player.hasShield = true;
+                // Desactivar escudo después de 5 segundos
+                setTimeout(() => { player.hasShield = false; }, 5000);
+            } else if (p.type === 'weapon') {
+                player.weaponLevel = 2;
+                // Desactivar arma mejorada después de 10 segundos
+                setTimeout(() => { player.weaponLevel = 1; }, 10000);
+            }
+            
+            // Sonido opcional de power-up (usamos shootSound bajito por ahora o nada)
+            if (soundOn) {
+                // Podrías agregar un sonido específico aquí
+            }
+            
+            powerUps.splice(i, 1);
+            continue;
+        }
+
+        if (p.y > canvas.height) powerUps.splice(i, 1);
+    }
+
     // Mover balas enemigas
     for (let i = enemyBullets.length - 1; i >= 0; i--) {
         enemyBullets[i].y += enemyBullets[i].speed;
         
-        if (rectIntersect(playerHitbox, enemyBullets[i])) {
+        // Solo matar si NO tiene escudo
+        if (!player.hasShield && rectIntersect(playerHitbox, enemyBullets[i])) {
             handleGameOver();
         }
         if (enemyBullets[i].y > canvas.height) enemyBullets.splice(i, 1);
@@ -396,7 +479,8 @@ function update() {
         en.y += en.speed;
         
         // Colisión con jugador
-        if (rectIntersect(playerHitbox, en)) {
+        // Solo matar si NO tiene escudo
+        if (!player.hasShield && rectIntersect(playerHitbox, en)) {
             handleGameOver();
         }
 
@@ -472,6 +556,19 @@ function draw() {
         ctx.drawImage(playerImg, player.x, player.y, player.w, player.h);
     }
 
+    // Dibujar efecto de ESCUDO
+    if (player.hasShield && !playerDestroyed) {
+        ctx.save();
+        ctx.strokeStyle = "#00d4ff";
+        ctx.lineWidth = 3;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#00d4ff";
+        ctx.beginPath();
+        ctx.arc(player.x + player.w / 2, player.y + player.h / 2, player.w / 1.2, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    }
+
     // Dibujar balas
     ctx.fillStyle = "yellow";
     bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
@@ -479,6 +576,11 @@ function draw() {
     // Dibujar balas enemigas
     ctx.fillStyle = "red";
     enemyBullets.forEach(eb => ctx.fillRect(eb.x, eb.y, eb.w, eb.h));
+
+    // Dibujar Power-Ups
+    powerUps.forEach(p => {
+        ctx.drawImage(p.img, p.x, p.y, p.w, p.h);
+    });
 
     // Dibujar explosiones
     explosions.forEach(exp => ctx.drawImage(explosionImg, exp.x, exp.y, exp.w, exp.h));
@@ -612,6 +714,8 @@ function launchGame() {
     playerDestroyed = false;
     menuMusic.pause();
     level = 1;
+    player.hasShield = false;
+    player.weaponLevel = 1;
     menuMusic.currentTime = 0;
     if (musicOn) bgMusic.play();
 

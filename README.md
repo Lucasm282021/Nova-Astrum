@@ -11,12 +11,16 @@
     *   🔫 Naves que disparan (Shooters).
     *   💨 Naves rápidas (Kamikazes).
     *   🛡️ Tanques (Requieren múltiples disparos).
+*   **Power-Ups (Mejoras):**
+    *   🛡️ **Escudo:** Otorga invulnerabilidad temporal (5s).
+    *   ⚡ **Arma:** Mejora el disparo a doble cañón (10s).
 *   **Niveles de Dificultad:** Ajustable entre Fácil, Normal y Difícil (afecta la velocidad y frecuencia de aparición).
 *   **Sistema de Puntuación:**
     *   Guardado local de mejores puntuaciones (High Scores) usando `localStorage`.
     *   Tabla de líderes (Top 10).
 *   **Soporte Multiplataforma:**
-    *   🖥️ **PC:** Control con Mouse.
+    *   📱 **Diseño Responsivo:** Interfaz adaptable a diferentes resoluciones y dispositivos móviles.
+    *   �️ **PC:** Control con Mouse.
     *   📱 **Móvil:** Control Táctil (Touch).
 *   **Audio:** Efectos de sonido inmersivos y música de fondo (con opciones de Mute).
 
@@ -30,6 +34,12 @@
 ### Móvil / Tablet
 *   **Movimiento:** Toca y arrastra el dedo por la pantalla.
 *   **Disparo:** Toca la pantalla (o mantén presionado mientras te mueves).
+
+## ⚡ Power-Ups
+
+Durante la partida aparecerán ítems especiales flotando:
+*   **Escudo (Icono Plateado):** Crea un campo de fuerza que te protege de todo daño. ¡Aprovecha para destruir enemigos chocando contra ellos!
+*   **Rayo (Icono Dorado):** Duplica tu potencia de fuego. Ideal para limpiar oleadas grandes de enemigos.
 
 ## 🛠️ Instalación y Ejecución
 
@@ -74,7 +84,8 @@ Desarrollado como parte del portafolio de proyectos 2026.
 Actualmente el juego es funcional y estable.
 
 **Mejoras Futuras Planeadas:**
-*   [ ] Agregar Power-ups (Escudos, Disparo Doble).
+*   [x] Agregar Power-ups (Escudos, Disparo Doble).
+*   [x] Optimización de interfaz y refactorización de código (CSS/HTML).
 *   [ ] Implementar Jefes Finales cada 10 niveles.
 *   [ ] Efectos de partículas más avanzados.
 

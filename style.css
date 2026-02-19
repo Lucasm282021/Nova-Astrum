@@ -79,6 +79,9 @@ nav a:hover, #ship-selection-back:hover {
     min-width: 40vmin;
     color: white;
     z-index: 20;
+    max-height: 85vh; /* Limita la altura al 85% de la pantalla */
+    overflow-y: auto; /* Habilita scroll si el contenido es muy largo */
+    box-sizing: border-box;
 }
 
 /* Listas de menú */
@@ -115,3 +118,178 @@ nav a:hover, #ship-selection-back:hover {
 /* Títulos */
 .title-lg { font-size: 6vmin; margin-top: 0; }
 .title-md { font-size: 4vmin; margin-top: 0; }
+
+/* --- Estructura y Componentes (Refactorización) --- */
+
+.game-wrapper {
+    position: relative;
+}
+
+/* Menú Principal */
+#main-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+#menu-music-toggle {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+/* Estados iniciales de menús (Ocultos) */
+#options-menu, #game-over-screen, #high-scores-screen, #credits-screen, #pause-menu {
+    display: none;
+}
+
+/* Opciones */
+.option-item { margin: 10px; color: white; font-size: 3.5vmin; }
+.option-link-active { color: #00d4ff; text-decoration: none; }
+.option-back-container { margin: 20px 10px 10px; }
+.link-danger { color: #ff4d4d !important; }
+.link-highlight { color: #00d4ff !important; }
+
+/* Game Over */
+.text-danger { color: #ff4d4d; }
+.text-highlight { color: #00d4ff; }
+.score-text { font-size: 4vmin; }
+#high-score-input { display: none; } /* Controlado por JS */
+#player-name {
+    padding: 5px;
+    font-size: 3vmin;
+    text-align: center;
+    width: 25vmin;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 10px;
+}
+.game-over-actions { margin-top: 20px; }
+
+/* High Scores */
+.high-scores-list {
+    text-align: left;
+    padding-left: 20px;
+    font-size: 3.5vmin;
+    margin: 0 auto;
+    display: inline-block;
+}
+.scores-actions { margin-top: 20px; }
+
+/* Créditos */
+.credits-content { margin-bottom: 20px; font-size: 3.5vmin; }
+.version-text { font-size: 2.5vmin; margin-top: 15px; color: #aaa; }
+
+/* Pausa */
+.volume-control { color: white; font-size: 3vmin; margin-top: 15px; }
+#sfx-volume-control { width: 100%; cursor: pointer; margin-top: 5px; }
+.btn-light { background: white; color: black; }
+
+/* Instrucciones */
+.instructions-title {
+    color: #00d4ff;
+    margin-bottom: 3vmin; /* Margen adaptable */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px #00d4ff;
+}
+.instructions-box {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3vmin; /* Padding adaptable */
+    border-radius: 15px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    max-width: 90%; /* Más ancho en móviles */
+    max-height: 55vh; /* Altura máxima para el contenido de instrucciones */
+    overflow-y: auto; /* Scroll interno */
+}
+.instructions-list {
+    list-style: none;
+    padding: 0;
+    font-size: 3.5vmin;
+    line-height: 2.2;
+    text-align: left;
+    margin: 0;
+}
+.text-pc { color: #00d4ff; font-weight: bold; }
+.text-objective { color: #ff4d4d; font-weight: bold; margin-top: 10px; }
+.text-gold { color: #ffd700; font-weight: bold; }
+.powerup-item { margin-top: 15px; }
+.powerup-details { font-size: 0.8em; margin-top: 5px; line-height: 1.4; }
+
+.enemies-section {
+    margin-top: 20px;
+    border-top: 1px solid rgba(0, 212, 255, 0.3);
+    padding-top: 15px;
+}
+.enemies-title {
+    color: #ff4d4d;
+    text-align: center;
+    margin: 0 0 15px 0;
+    font-size: 4vmin;
+}
+.enemies-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+.enemy-card { text-align: center; }
+.enemy-img { width: 6vmin; height: 6vmin; object-fit: contain; }
+.enemy-img-lg { width: 8vmin; height: 8vmin; object-fit: contain; }
+.enemy-score { font-size: 2.5vmin; color: #00d4ff; margin-top: 5px; }
+.enemy-score-boss { font-size: 2.5vmin; color: #ff4d4d; font-weight: bold; margin-top: 5px; }
+
+#instructions-back-btn {
+    margin-top: 40px;
+    padding: 15px 40px;
+    font-size: 3.5vmin;
+    cursor: pointer;
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.5);
+    transition: transform 0.2s;
+}
+
+/* Selección de Nave */
+.ship-selection-title {
+    color: #00d4ff;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+.ship-grid {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.ship-option { cursor: pointer; text-align: center; transition: transform 0.2s; }
+.ship-img {
+    width: 15vmin;
+    height: 15vmin;
+    object-fit: contain;
+    border-radius: 10px;
+    padding: 10px;
+}
+.ship-img-1 { border: 2px solid #00d4ff; background: rgba(0, 212, 255, 0.1); }
+.ship-img-2 { border: 2px solid #ff4d4d; background: rgba(255, 77, 77, 0.1); }
+.ship-label { margin-top: 10px; font-size: 3.5vmin; }
+.ship-label-1 { color: #00d4ff; }
+.ship-label-2 { color: #ff4d4d; }
+.ship-back-link { margin-top: 40px; font-size: 3.5vmin; color: #ff4d4d; text-decoration: none; }
+
+/* Scrollbar personalizado para que se vea bien en el juego */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: #00d4ff; border-radius: 4px; }

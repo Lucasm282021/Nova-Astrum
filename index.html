@@ -8,10 +8,10 @@
 </head>
 <body>
     <div id="game-container">
-        <div style="position: relative;">
+        <div class="game-wrapper">
             <canvas id="gameCanvas"></canvas>
-            <div id="main-menu" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;">
-                <button id="menu-music-toggle" style="position: absolute; bottom: 20px; right: 20px; background: none; border: none; color: white; font-size: 30px; cursor: pointer;">🔊</button>
+            <div id="main-menu">
+                <button id="menu-music-toggle">🔊</button>
                 <nav class="menu-box">
                     <ul class="menu-list">
                         <li><a href="#" id="start-btn" class="menu-link">Iniciar Juego</a></li>
@@ -22,106 +22,114 @@
                     </ul>
                 </nav>
             </div>
-            <nav id="options-menu" class="menu-box" style="display: none;">
+            <nav id="options-menu" class="menu-box">
                 <h2 class="title-md">Dificultad</h2>
                 <ul class="menu-list">
                     <li><a href="#" id="diff-easy" class="menu-link">Fácil</a></li>
-                    <li><a href="#" id="diff-normal" class="menu-link" style="color: #00d4ff;">Normal</a></li>
+                    <li><a href="#" id="diff-normal" class="menu-link link-highlight">Normal</a></li>
                     <li><a href="#" id="diff-hard" class="menu-link">Difícil</a></li>
-                    <li style="margin: 10px; color: white; font-size: 3.5vmin;">Música: <a href="#" id="btn-music" style="color: #00d4ff; text-decoration: none;">ON</a></li>
-                    <li style="margin: 10px; color: white; font-size: 3.5vmin;">Sonidos: <a href="#" id="btn-sound" style="color: #00d4ff; text-decoration: none;">ON</a></li>
-                    <li style="margin: 20px 10px 10px;"><a href="#" id="options-back" class="menu-link" style="color: #ff4d4d;">Volver</a></li>
+                    <li class="option-item">Música: <a href="#" id="btn-music" class="option-link-active">ON</a></li>
+                    <li class="option-item">Sonidos: <a href="#" id="btn-sound" class="option-link-active">ON</a></li>
+                    <li class="option-back-container"><a href="#" id="options-back" class="menu-link link-danger">Volver</a></li>
                 </ul>
             </nav>
-            <div id="game-over-screen" class="menu-box" style="display: none;">
-                <h1 class="title-lg" style="color: #ff4d4d;">GAME OVER</h1>
-                <p style="font-size: 4vmin;">Puntos: <span id="final-score">0</span></p>
-                <div id="high-score-input" style="display: none;">
-                    <p style="color: #00d4ff;">¡Nuevo Récord!</p>
-                    <input type="text" id="player-name" placeholder="Tu Nombre" maxlength="10" style="padding: 5px; font-size: 3vmin; text-align: center; width: 25vmin; border-radius: 5px; border: none; margin-bottom: 10px;">
+            <div id="game-over-screen" class="menu-box">
+                <h1 class="title-lg text-danger">GAME OVER</h1>
+                <p class="score-text">Puntos: <span id="final-score">0</span></p>
+                <div id="high-score-input">
+                    <p class="text-highlight">¡Nuevo Récord!</p>
+                    <input type="text" id="player-name" placeholder="Tu Nombre" maxlength="10">
                     <button id="save-score-btn" class="btn btn-success">Guardar</button>
                 </div>
-                <div style="margin-top: 20px;">
+                <div class="game-over-actions">
                     <button id="restart-btn" class="btn btn-primary">Reiniciar</button>
-                    <button id="menu-btn" class="btn btn-danger">Menú</button>
+                    <button id="menu-btn" class="btn btn-danger">Menú</button>  
                 </div>
             </div>
-            <div id="high-scores-screen" class="menu-box" style="display: none;">
-                <h2 class="title-md" style="color: #00d4ff;">Mejores Puntuaciones</h2>
-                <ol id="high-scores-list" style="text-align: left; padding-left: 20px; font-size: 3.5vmin; margin: 0 auto; display: inline-block;"></ol>
-                <div style="margin-top: 20px;"><button id="close-scores-btn" class="btn btn-danger">Cerrar</button></div>
+            <div id="high-scores-screen" class="menu-box">
+                <h2 class="title-md text-highlight">Mejores Puntuaciones</h2>
+                <ol id="high-scores-list" class="high-scores-list"></ol>
+                <div class="scores-actions"><button id="close-scores-btn" class="btn btn-danger">Cerrar</button></div>
             </div>
-            <div id="credits-screen" class="menu-box" style="display: none;">
-                <h2 class="title-md" style="color: #00d4ff;">Créditos</h2>
-                <div style="margin-bottom: 20px; font-size: 3.5vmin;">
-                    <p>Desarrollado por:<br><strong style="color: #00d4ff;">Montero Lucas Damian</strong></p>
-                    <p style="font-size: 2.5vmin; margin-top: 15px; color: #aaa;">Versión 1.0.0</p>
+            <div id="credits-screen" class="menu-box">
+                <h2 class="title-md text-highlight">Créditos</h2>
+                <div class="credits-content">
+                    <p>Desarrollado por:<br><strong class="text-highlight">Montero Lucas Damian</strong></p>
+                    <p class="version-text">Versión 1.0.0</p>
                 </div>
                 <button id="credits-back-btn" class="btn btn-danger">Volver</button>
             </div>
-            <div id="pause-menu" class="menu-box" style="display: none;">
+            <div id="pause-menu" class="menu-box">
                 <h1 class="title-lg">PAUSA</h1>
                 <ul class="menu-list">
                     <li><button id="resume-btn" class="btn btn-primary btn-full">Reanudar</button></li>
                     <li><button id="pause-restart-btn" class="btn btn-danger btn-full">Reiniciar</button></li>
-                    <li style="color: white; font-size: 3vmin; margin-top: 15px;">
+                    <li class="volume-control">
                         Volumen FX: <span id="sfx-vol-value">100%</span>
-                        <input type="range" id="sfx-volume-control" min="0" max="1" step="0.1" value="1" style="width: 100%; cursor: pointer; margin-top: 5px;">
+                        <input type="range" id="sfx-volume-control" min="0" max="1" step="0.1" value="1">
                     </li>
-                    <li><button id="pause-menu-btn" class="btn btn-full" style="background: white; color: black;">Menú Principal</button></li>
+                    <li><button id="pause-menu-btn" class="btn btn-full btn-light">Menú Principal</button></li>
                 </ul>
             </div>
             <div id="instructions-screen" class="screen-overlay">
-                <h1 class="title-lg" style="color: #00d4ff; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 20px #00d4ff;">Instrucciones</h1>
-                <div style="background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 15px; border: 1px solid rgba(0, 212, 255, 0.3); max-width: 80%;">
-                    <ul style="list-style: none; padding: 0; font-size: 3.5vmin; line-height: 2.2; text-align: left; margin: 0;">
-                        <li style="color: #00d4ff; font-weight: bold;">💻 PC:</li>
+                <h1 class="title-lg instructions-title">Instrucciones</h1>
+                <div class="instructions-box">
+                    <ul class="instructions-list">
+                        <li class="text-pc">💻 PC:</li>
                         <li>🖱️ Mover: Mouse | 💥 Disparar: Clic</li>
-                        <li style="color: #ff4d4d; font-weight: bold; margin-top: 10px;">🎯 Objetivo:</li>
+                        <li class="text-objective">🎯 Objetivo:</li>
                         <li>Destruye enemigos, esquiva y sobrevive.</li>
                         <li>⏸️ Pausa: Tecla 'P' o 'Esc'</li>
+                        <li class="powerup-item">
+                            <strong class="text-gold">⚡ Power-Ups:</strong>
+                            <div class="powerup-details">
+                                🛡️ <strong>Escudo:</strong> Invulnerabilidad (5s).<br>
+                                ⚡ <strong>Rayo:</strong> Disparo Doble (10s).
+                            </div>
+                        </li>
                     </ul>
-                    <div style="margin-top: 20px; border-top: 1px solid rgba(0, 212, 255, 0.3); padding-top: 15px;">
-                        <h3 style="color: #ff4d4d; text-align: center; margin: 0 0 15px 0; font-size: 4vmin;">Enemigos y Puntos</h3>
-                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;">
-                            <div style="text-align: center;">
-                                <img src="img/enemigo.png" style="width: 6vmin; height: 6vmin; object-fit: contain;">
-                                <div style="font-size: 2.5vmin; color: #00d4ff; margin-top: 5px;">10</div>
+                
+                    <div class="enemies-section">
+                        <h3 class="enemies-title">Enemigos y Puntos</h3>
+                        <div class="enemies-grid">
+                            <div class="enemy-card">
+                                <img src="img/enemigo.png" class="enemy-img">
+                                <div class="enemy-score">10</div>
                             </div>
-                            <div style="text-align: center;">
-                                <img src="img/enemigo3.png" style="width: 6vmin; height: 6vmin; object-fit: contain;">
-                                <div style="font-size: 2.5vmin; color: #00d4ff; margin-top: 5px;">15</div>
+                            <div class="enemy-card">
+                                <img src="img/enemigo3.png" class="enemy-img">
+                                <div class="enemy-score">15</div>
                             </div>
-                            <div style="text-align: center;">
-                                <img src="img/enemigo2.png" style="width: 6vmin; height: 6vmin; object-fit: contain;">
-                                <div style="font-size: 2.5vmin; color: #00d4ff; margin-top: 5px;">20</div>
+                            <div class="enemy-card">
+                                <img src="img/enemigo2.png" class="enemy-img">
+                                <div class="enemy-score">20</div>
                             </div>
-                            <div style="text-align: center;">
-                                <img src="img/enemigo4.png" style="width: 6vmin; height: 6vmin; object-fit: contain;">
-                                <div style="font-size: 2.5vmin; color: #00d4ff; margin-top: 5px;">25</div>
+                            <div class="enemy-card">
+                                <img src="img/enemigo4.png" class="enemy-img">
+                                <div class="enemy-score">25</div>
                             </div>
-                            <div style="text-align: center;">
-                                <img src="img/enemigo5.png" style="width: 8vmin; height: 8vmin; object-fit: contain;">
-                                <div style="font-size: 2.5vmin; color: #ff4d4d; font-weight: bold; margin-top: 5px;">50</div>
+                            <div class="enemy-card">
+                                <img src="img/enemigo5.png" class="enemy-img-lg">
+                                <div class="enemy-score-boss">50</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button id="instructions-back-btn" style="margin-top: 40px; padding: 15px 40px; font-size: 3.5vmin; cursor: pointer; background: #ff4d4d; border: none; color: white; border-radius: 50px; font-weight: bold; box-shadow: 0 0 15px rgba(255, 77, 77, 0.5); transition: transform 0.2s;">ENTENDIDO</button>
+                <button id="instructions-back-btn">ENTENDIDO</button>
             </div>
             <div id="ship-selection-screen" class="screen-overlay">
-                <h1 class="title-lg" style="color: #00d4ff; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 3px;">Selecciona tu Nave</h1>
-                <div style="display: flex; gap: 50px; flex-wrap: wrap; justify-content: center;">
-                    <div id="ship-1-btn" style="cursor: pointer; text-align: center; transition: transform 0.2s;">
-                        <img src="img/player/player-1.png" style="width: 15vmin; height: 15vmin; object-fit: contain; border: 2px solid #00d4ff; border-radius: 10px; padding: 10px; background: rgba(0, 212, 255, 0.1);">
-                        <p style="margin-top: 10px; font-size: 3.5vmin; color: #00d4ff;">Modelo 1</p>
+                <h1 class="title-lg ship-selection-title">Selecciona tu Nave</h1>
+                <div class="ship-grid">
+                    <div id="ship-1-btn" class="ship-option">
+                        <img src="img/player/player-1.png" class="ship-img ship-img-1">
+                        <p class="ship-label ship-label-1">Modelo 1</p>
                     </div>
-                    <div id="ship-2-btn" style="cursor: pointer; text-align: center; transition: transform 0.2s;">
-                        <img src="img/player/player-2.png" style="width: 15vmin; height: 15vmin; object-fit: contain; border: 2px solid #ff4d4d; border-radius: 10px; padding: 10px; background: rgba(255, 77, 77, 0.1);">
-                        <p style="margin-top: 10px; font-size: 3.5vmin; color: #ff4d4d;">Modelo 2</p>
+                    <div id="ship-2-btn" class="ship-option">
+                        <img src="img/player/player-2.png" class="ship-img ship-img-2">
+                        <p class="ship-label ship-label-2">Modelo 2</p>
                     </div>
                 </div>
-                <a href="#" id="ship-selection-back" style="margin-top: 40px; font-size: 3.5vmin; color: #ff4d4d; text-decoration: none;">Volver</a>
+                <a href="#" id="ship-selection-back" class="ship-back-link">Volver</a>
             </div>
         </div>
     </div>
